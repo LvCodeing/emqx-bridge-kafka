@@ -1,0 +1,44 @@
+%%-*- mode: erlang -*-
+%% emqx_bridge_kafka config mapping
+
+{mapping, "bridge.bootstrap_broker_host", "emqx_bridge_kafka.bridges", [
+  {default, "localhost"},
+  {datatype, string}
+]}.
+{mapping, "bridge.bootstrap_broker_port", "emqx_bridge_kafka.bridges", [
+  {default, 9092},
+  {datatype, integer}
+]}.
+
+{mapping, "bridge.query_api_versions", "emqx_bridge_kafka.bridges", [
+  {default, true},
+  {datatype, {enum, [true, false]}}
+]}.
+
+{mapping, "bridge.reconnect_cool_down_seconds", "emqx_bridge_kafka.bridges", [
+  {default, 10},
+  {datatype, integer}
+]}.
+
+{mapping, "bridge.producer_partition", "emqx_bridge_kafka.bridges", [
+  {default, 1},
+  {datatype, integer}
+]}.
+
+{
+  translation, "emqx_bridge_kafka.bridges",
+    fun(Conf) ->
+      KafkaBootstrapBrokerHost      = cuttlefish:conf_get("bridge.bootstrap_broker_host"      , Conf),
+      KafkaBootstrapBrokerPort      = cuttlefish:conf_get("bridge.bootstrap_broker_port"      , Conf),
+      KafkaQueryApiVersions         = cuttlefish:conf_get("bridge.query_api_versions"         , Conf),
+      KafkaReconnectCoolDownSeconds = cuttlefish:conf_get("bridge.reconnect_cool_down_seconds", Conf),
+      KafkaProducerPartition        = cuttlefish:conf_get("bridge.producer_partition"         , Conf),
+      [
+        {bootstrap_broker_host      , KafkaBootstrapBrokerHost}, 
+        {bootstrap_broker_port      , KafkaBootstrapBrokerPort}, 
+        {query_api_versions         , KafkaQueryApiVersions}, 
+        {reconnect_cool_down_seconds, KafkaReconnectCoolDownSeconds}, 
+        {producer_partition         , KafkaProducerPartition}
+      ]
+    end
+}.
